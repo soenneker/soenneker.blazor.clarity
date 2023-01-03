@@ -57,7 +57,7 @@ jobs:
         run: dotnet pack --no-build --configuration Release Soenneker.Blazor.Clarity.csproj --output .
 
       - name: Publish to nuGet
-        run: dotnet nuget push **\*.nupkg --source 'https://api.nuget.org/v3/index.json' --api-key ${{secrets.NUGET_API_KEY}}
+        run: dotnet nuget push **\*.nupkg --source 'https://api.nuget.org/v3/index.json' --api-key ${{secrets.NUGET_API_KEY}} --skip-duplicate
       
       - name: Publish to GitHub
-        run: dotnet nuget push **\*.nupkg --source "github" --api-key ${{secrets.RELEASE_API_KEY}}
+        run: dotnet nuget push **\*.nupkg --source "github" --api-key ${{secrets.RELEASE_API_KEY}} --skip-duplicate
