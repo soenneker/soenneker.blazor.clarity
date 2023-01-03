@@ -10,8 +10,8 @@
 
     <PropertyGroup>
         <Description>A small Blazor interop library that sets up Microsoft Clarity</Description>
-        <VersionPrefix Condition="'$(BUILD_BUILDNUMBER)' == ''">1.0.0</VersionPrefix>
-        <VersionPrefix Condition="'$(BUILD_BUILDNUMBER)' != ''">$(BUILD_BUILDNUMBER)</VersionPrefix>
+        <VersionPrefix Condition="'$(BUILD_VERSION)' == ''">1.0.0</VersionPrefix>
+        <VersionPrefix Condition="'$(BUILD_VERSION)' != ''">$(BUILD_VERSION)</VersionPrefix>
         <AssemblyName>Soenneker.Blazor.Clarity</AssemblyName>
         <PackageId>Soenneker.Blazor.Clarity</PackageId>
         <PackageTags>Blazor Clarity Interop</PackageTags>
@@ -36,8 +36,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <None Include="README.md" Pack="true" PackagePath="\" />
-        <None Include="LICENSE" Pack="true" PackagePath="\" />
+        <None Include="..\README.md" Pack="true" PackagePath="\" />
+        <None Include="..\LICENSE" Pack="true" PackagePath="\" />
 
         <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
     </ItemGroup>
