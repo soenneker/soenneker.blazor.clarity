@@ -44,7 +44,7 @@ jobs:
       
       - name: Setting up build version
         run: |
-          $version = "1.0.${{GITHUB_RUN_NUMBER}}"
+          $version = "1.0.$env:GITHUB_RUN_NUMBER"
           echo "BUILD_VERSION=$version"
 
       - name: Setup .NET Core 7.0
