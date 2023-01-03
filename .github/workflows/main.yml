@@ -1,0 +1,63 @@
+name: Main
+on:
+  push:
+    branches:
+      - main
+
+    # Publish `v1.2.3` tags as releases.
+    tags:
+      - v*
+
+  # Testing - run for any PRs.
+  pull_request:
+    branches:
+      - main
+jobs:
+
+  # Build, test and publish (if this is a push/merge).
+  build-and-test:
+    runs-on: ubuntu-latest
+  
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup .NET 7.0
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 7.0.x
+
+      - name: Install dependencies
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --configuration Release --no-restore
+
+      - name: Test
+        run: dotnet test --no-restore --verbosity normal
+
+  publish-package:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Setup .NET Core 7.0
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 7.0.x
+
+      - name: Install dependencies
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --configuration Release --no-restore
+
+      - name: Pack
+        run: dotnet pack --no-build --configuration Release Soenneker.Blazor.Clarity/Soenneker.Blazor.Clarity.csproj --output .
+
+      - name: Publish to nuGet
+        run: dotnet nuget push **\*.nupkg --source 'https://api.nuget.org/v3/index.json' -ApiKey ${{secrets.NUGET_API_KEY}}
+      
+      - name: Publish to GitHub
+        run: dotnet nuget push **\*.nupkg --source "github" -ApiKey ${{secrets.GITHUB_API_KEY}}
