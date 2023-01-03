@@ -11,7 +11,7 @@ Install-Package Soenneker.Blazor.Clarity
 
 ## Usage
 
-1. Insert this in your `index.html` as one of the very first scripts
+1. Insert the script in `wwwroot/index.html` at the bottom of your `<body>` but before the other scripts
 
 ```html
 <script src="_content/Soenneker.Blazor.Clarity/clarity.js"></script>
@@ -27,20 +27,16 @@ public static async Task Main(string[] args)
 }
 ```
 
-3. Add the following statement to your `_Imports.razor`
-```csharp
-@using Soenneker.Blazor.Clarity
-```
-
-4. Inject `IClarityInterop` within your `App.Razor` file
+3. Inject `IClarityInterop` within your `App.Razor` file
 
 
 ```csharp
+@using Soenneker.Blazor.Clarity.Abstract
 @inject IClarityInterop ClarityInterop
 ```
 
 
-5. Call ASAP within `OnInitializedAsync` within `App.Razor` using your Clarity project key
+4. Initialize the interop in `OnInitializedAsync` within `App.Razor` using your Clarity project key
 
 ```csharp
 protected override async Task OnInitializedAsync()
