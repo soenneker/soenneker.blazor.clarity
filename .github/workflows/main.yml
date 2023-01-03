@@ -44,8 +44,9 @@ jobs:
       
       - name: Setting up build version
         run: |
-          $version = "1.0.$GITHUB_RUN_NUMBER"
-          echo "BUILD_VERSION=$version"
+          export version="1.0.$GITHUB_RUN_ATTEMPT"
+          export BUILD_VERSION=$version
+          echo "$version"
 
       - name: Setup .NET Core 7.0
         uses: actions/setup-dotnet@v3
