@@ -1,4 +1,6 @@
-[![NuGet Version](https://img.shields.io/nuget/v/Soenneker.Blazor.Clarity.svg?style=flat)](https://www.nuget.org/packages/Soenneker.Blazor.Clarity/)
+[![](https://img.shields.io/nuget/v/Soenneker.Blazor.Clarity.svg?style=for-the-badge)](https://www.nuget.org/packages/Soenneker.Blazor.Clarity/)
+[![](https://img.shields.io/github/actions/workflow/status/soenneker/soenneker.blazor.clarity/main.yml?style=for-the-badge)](https://github.com/soenneker/soenneker.blazor.clarity/actions/workflows/main.yml)
+[![](https://img.shields.io/nuget/dt/Soenneker.Blazor.Clarity.svg?style=for-the-badge)](https://www.nuget.org/packages/Soenneker.Blazor.Clarity/)
 
 # Soenneker.Blazor.Clarity
 ### A small Blazor interop library that sets up [Microsoft Clarity](https://clarity.microsoft.com/)
