@@ -2,7 +2,7 @@
 [![](https://img.shields.io/github/actions/workflow/status/soenneker/soenneker.blazor.clarity/publish.yml?style=for-the-badge)](https://github.com/soenneker/soenneker.blazor.clarity/actions/workflows/publish.yml)
 [![](https://img.shields.io/nuget/dt/Soenneker.Blazor.Clarity.svg?style=for-the-badge)](https://www.nuget.org/packages/Soenneker.Blazor.Clarity/)
 
-# Soenneker.Blazor.Clarity
+# ![](https://user-images.githubusercontent.com/4441470/224455560-91ed3ee7-f510-4041-a8d2-3fc093025112.png) Soenneker.Blazor.Clarity
 ### A small Blazor interop library that sets up [Microsoft Clarity](https://clarity.microsoft.com/)
 
 ## Installation
