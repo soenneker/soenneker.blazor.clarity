@@ -17,7 +17,6 @@ public class ClarityInterop : IClarityInterop
         _logger = logger;
     }
 
-    ///<inheritdoc/>
     public async ValueTask Init(string key)
     {
         _logger.LogDebug("Initializing Clarity...");

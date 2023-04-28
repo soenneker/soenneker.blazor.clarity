@@ -2,6 +2,9 @@
 
 namespace Soenneker.Blazor.Clarity.Abstract;
 
+/// <summary>
+/// A Blazor interop library that sets up Microsoft Clarity (https://clarity.microsoft.com/)
+/// </summary>
 public interface IClarityInterop 
 {
     /// <summary>
