@@ -17,7 +17,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{
 		.github\workflows\publish.yml = .github\workflows\publish.yml
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Soenneker.Blazor.Clarity.Tests", "test\Soenneker.Blazor.Clarity.Tests\Soenneker.Blazor.Clarity.Tests.csproj", "{20583BCB-FEBC-46C3-B18F-1CDC847BC7AF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Soenneker.Blazor.Clarity.Tests", "test\Soenneker.Blazor.Clarity.Tests.csproj", "{20583BCB-FEBC-46C3-B18F-1CDC847BC7AF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
