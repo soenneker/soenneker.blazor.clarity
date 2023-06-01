@@ -17,6 +17,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{
 		.github\workflows\publish.yml = .github\workflows\publish.yml
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Soenneker.Blazor.Clarity.Tests", "test\Soenneker.Blazor.Clarity.Tests\Soenneker.Blazor.Clarity.Tests.csproj", "{20583BCB-FEBC-46C3-B18F-1CDC847BC7AF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,9 +29,16 @@ Global
 		{41850636-33B4-4228-AE59-A2113F66B9FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{41850636-33B4-4228-AE59-A2113F66B9FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{41850636-33B4-4228-AE59-A2113F66B9FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20583BCB-FEBC-46C3-B18F-1CDC847BC7AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20583BCB-FEBC-46C3-B18F-1CDC847BC7AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20583BCB-FEBC-46C3-B18F-1CDC847BC7AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20583BCB-FEBC-46C3-B18F-1CDC847BC7AF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D786EC1A-4F59-412F-8624-83E6E3525B0C} = {4E42254D-039C-40ED-B3F4-8C1A94A366D1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B849EC5C-B7B3-4C90-9B66-CBC15CCB776A}
