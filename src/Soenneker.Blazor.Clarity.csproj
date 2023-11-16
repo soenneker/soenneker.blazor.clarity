@@ -9,7 +9,7 @@
 
     <PropertyGroup>
         <Description>A small Blazor interop library that sets up Microsoft Clarity</Description>
-        <Version Condition="'$(BUILD_VERSION)' == ''">2.0.0</Version>
+        <Version Condition="'$(BUILD_VERSION)' == ''">2.1.0</Version>
         <Version Condition="'$(BUILD_VERSION)' != ''">$(BUILD_VERSION)</Version>
         <AssemblyName>Soenneker.Blazor.Clarity</AssemblyName>
         <PackageId>Soenneker.Blazor.Clarity</PackageId>
