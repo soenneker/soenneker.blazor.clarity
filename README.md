@@ -8,7 +8,7 @@
 ## Installation
 
 ```
-Install-Package Soenneker.Blazor.Clarity
+dotnet add package Soenneker.Blazor.Clarity
 ```
 
 ## Usage
