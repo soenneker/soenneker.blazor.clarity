@@ -17,10 +17,10 @@ public class ClarityInterop : IClarityInterop
         _logger = logger;
     }
 
-    public async ValueTask Init(string key)
+    public ValueTask Init(string key)
     {
         _logger.LogDebug("Initializing Clarity...");
 
-        await _jsRuntime.InvokeVoidAsync("initClarity", key);
+        return _jsRuntime.InvokeVoidAsync("initClarity", key);
     }
 }
