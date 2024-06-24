@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 
 namespace Soenneker.Blazor.Clarity.Abstract;
 
@@ -11,5 +12,5 @@ public interface IClarityInterop
     /// Calls the Clarity JS interop initialization code, and begins the connection to Clarity. <para/>
     /// Should be called ASAP in the app, typically in App.razor within OnInitializedAsync
     /// </summary>
-    ValueTask Init(string key);
+    ValueTask Init(string key, CancellationToken cancellationToken = default);
 }
