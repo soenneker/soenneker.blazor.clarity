@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Soenneker.Blazor.Clarity.Abstract;
@@ -6,7 +7,7 @@ namespace Soenneker.Blazor.Clarity.Abstract;
 /// <summary>
 /// A Blazor interop library that sets up Microsoft Clarity (https://clarity.microsoft.com/)
 /// </summary>
-public interface IClarityInterop 
+public interface IClarityInterop : IAsyncDisposable
 {
     /// <summary>
     /// Calls the Clarity JS interop initialization code, and begins the connection to Clarity. <para/>

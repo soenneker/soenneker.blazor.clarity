@@ -42,4 +42,9 @@ public class ClarityInterop : IClarityInterop
 
         await _jsRuntime.InvokeVoidAsync("ClarityInitializer.init", cancellationToken, key);
     }
+
+    public ValueTask DisposeAsync()
+    {
+        return _moduleImportUtil.DisposeModule("Soenneker.Blazor.Clarity/js/clarityinterop.js");
+    }
 }
