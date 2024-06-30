@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Soenneker.Blazor.Clarity.Abstract;
 using Soenneker.Blazor.Utils.ModuleImport.Registrars;
+using Soenneker.Blazor.Utils.ResourceLoader.Registrars;
 
 namespace Soenneker.Blazor.Clarity.Registrars;
 
@@ -11,11 +12,11 @@ namespace Soenneker.Blazor.Clarity.Registrars;
 public static class ClarityRegistrar
 {
     /// <summary>
-    /// Shorthand for <code>services.TryAddScoped</code>
+    /// Shorthand for <code>services.TryAddSingleton</code>
     /// </summary>
     public static void AddClarity(this IServiceCollection services)
     {
-        services.AddModuleImportUtil();
-        services.TryAddScoped<IClarityInterop, ClarityInterop>();
+        services.AddResourceLoader();
+        services.TryAddSingleton<IClarityInterop, ClarityInterop>();
     }
 }

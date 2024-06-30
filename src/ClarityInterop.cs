@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.JSInterop;
 using Soenneker.Blazor.Clarity.Abstract;
 using Soenneker.Blazor.Utils.ModuleImport.Abstract;
+using Soenneker.Blazor.Utils.ResourceLoader.Abstract;
 using Soenneker.Extensions.ValueTask;
 using Soenneker.Utils.AsyncSingleton;
 
@@ -14,22 +15,21 @@ public class ClarityInterop : IClarityInterop
 {
     private readonly IJSRuntime _jsRuntime;
     private readonly ILogger<ClarityInterop> _logger;
-    private readonly IModuleImportUtil _moduleImportUtil;
+    private readonly IResourceLoader _resourceLoader;
 
     private readonly AsyncSingleton<object> _scriptInitializer;
 
-    public ClarityInterop(IJSRuntime jSRuntime, ILogger<ClarityInterop> logger, IModuleImportUtil moduleImportUtil)
+    public ClarityInterop(IJSRuntime jSRuntime, ILogger<ClarityInterop> logger, IResourceLoader resourceLoader)
     {
         _jsRuntime = jSRuntime;
         _logger = logger;
-        _moduleImportUtil = moduleImportUtil;
+        _resourceLoader = resourceLoader;
 
         _scriptInitializer = new AsyncSingleton<object>(async objects =>
         {
             var cancellationToken = (CancellationToken)objects[0];
 
-            await _moduleImportUtil.Import("Soenneker.Blazor.Clarity/clarityinterop.js", cancellationToken);
-            await _moduleImportUtil.WaitUntilLoadedAndAvailable("Soenneker.Blazor.Clarity/clarityinterop.js", "ClarityInitializer", 100, cancellationToken);
+            await _resourceLoader.ImportModuleAndWaitUntilAvailable("Soenneker.Blazor.Clarity/clarityinterop.js", "ClarityInitializer", 100, cancellationToken);
             return new object();
         });
     }
@@ -45,6 +45,6 @@ public class ClarityInterop : IClarityInterop
 
     public ValueTask DisposeAsync()
     {
-        return _moduleImportUtil.DisposeModule("Soenneker.Blazor.Clarity/clarityinterop.js");
+        return _resourceLoader.DisposeModule("Soenneker.Blazor.Clarity/clarityinterop.js");
     }
 }
