@@ -1,4 +1,4 @@
-﻿export class ClarityInitializer {
+﻿export class ClarityInterop {
 
     init(key) {
         (function (c, l, a, r, i, t, y) {
@@ -8,6 +8,8 @@
             t.src = "https://www.clarity.ms/tag/" + i;
             y = l.getElementsByTagName(r)[0];
             y.parentNode.insertBefore(t, y);
-        })(window, document, "clarity", "script", this.key);
+        })(window, document, "clarity", "script", key);
     }
 }
+
+window.ClarityInterop = new ClarityInterop();
