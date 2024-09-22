@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.JSInterop;
@@ -40,8 +41,12 @@ public class ClarityInterop : IClarityInterop
         await _jsRuntime.InvokeVoidAsync("ClarityInterop.init", cancellationToken, key);
     }
 
-    public ValueTask DisposeAsync()
+    public async ValueTask DisposeAsync()
     {
-        return _resourceLoader.DisposeModule("Soenneker.Blazor.Clarity/clarityinterop.js");
+        GC.SuppressFinalize(this);
+
+        await _resourceLoader.DisposeModule("Soenneker.Blazor.Clarity/clarityinterop.js").NoSync();
+
+        await _scriptInitializer.DisposeAsync().NoSync();
     }
 }
