@@ -40,6 +40,6 @@
 
     <ItemGroup>
       <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.0" />
-      <PackageReference Include="Soenneker.Blazor.Utils.ResourceLoader" Version="2.1.549" />
+      <PackageReference Include="Soenneker.Blazor.Utils.ResourceLoader" Version="2.1.550" />
     </ItemGroup>
 </Project>
