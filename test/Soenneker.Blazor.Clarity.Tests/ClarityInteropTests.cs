@@ -1,7 +1,7 @@
 using Soenneker.Blazor.Clarity.Abstract;
 using Soenneker.Tests.FixturedUnit;
 using Xunit;
-using Xunit.Abstractions;
+
 
 namespace Soenneker.Blazor.Clarity.Tests;
 
