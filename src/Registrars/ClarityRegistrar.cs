@@ -10,9 +10,11 @@ namespace Soenneker.Blazor.Clarity.Registrars;
 /// </summary>
 public static class ClarityRegistrar
 {
-    public static void AddClarity(this IServiceCollection services)
+    public static IServiceCollection AddClarityInteropAsScoped(this IServiceCollection services)
     {
         services.AddResourceLoader();
         services.TryAddScoped<IClarityInterop, ClarityInterop>();
+
+        return services;
     }
 }
