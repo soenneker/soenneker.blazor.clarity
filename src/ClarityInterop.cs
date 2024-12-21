@@ -27,7 +27,7 @@ public class ClarityInterop : IClarityInterop
 
         _scriptInitializer = new AsyncSingleton<object>(async (token, _) =>
         {
-            await _resourceLoader.ImportModuleAndWaitUntilAvailable("Soenneker.Blazor.Clarity/clarityinterop.js", "ClarityInterop", 100, token);
+            await _resourceLoader.ImportModuleAndWaitUntilAvailable("Soenneker.Blazor.Clarity/clarityinterop.js", "ClarityInterop", 100, token).NoSync();
             return new object();
         });
     }
