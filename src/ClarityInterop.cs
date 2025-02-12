@@ -17,7 +17,7 @@ public class ClarityInterop : IClarityInterop
     private readonly ILogger<ClarityInterop> _logger;
     private readonly IResourceLoader _resourceLoader;
 
-    private readonly AsyncSingleton<object> _scriptInitializer;
+    private readonly AsyncSingleton _scriptInitializer;
 
     public ClarityInterop(IJSRuntime jSRuntime, ILogger<ClarityInterop> logger, IResourceLoader resourceLoader)
     {
@@ -25,7 +25,7 @@ public class ClarityInterop : IClarityInterop
         _logger = logger;
         _resourceLoader = resourceLoader;
 
-        _scriptInitializer = new AsyncSingleton<object>(async (token, _) =>
+        _scriptInitializer = new AsyncSingleton(async (token, _) =>
         {
             await _resourceLoader.ImportModuleAndWaitUntilAvailable("Soenneker.Blazor.Clarity/clarityinterop.js", "ClarityInterop", 100, token).NoSync();
             return new object();
@@ -36,7 +36,7 @@ public class ClarityInterop : IClarityInterop
     {
         _logger.LogDebug("Initializing Clarity...");
 
-        await _scriptInitializer.Get(cancellationToken).NoSync();
+        await _scriptInitializer.Init(cancellationToken).NoSync();
 
         await _jsRuntime.InvokeVoidAsync("ClarityInterop.init", cancellationToken, key);
     }
