@@ -38,7 +38,7 @@ public class ClarityInterop : IClarityInterop
 
         await _scriptInitializer.Init(cancellationToken).NoSync();
 
-        await _jsRuntime.InvokeVoidAsync("ClarityInterop.init", cancellationToken, key);
+        await _jsRuntime.InvokeVoidAsync("ClarityInterop.init", cancellationToken, key).NoSync();
     }
 
     public async ValueTask DisposeAsync()
