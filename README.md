@@ -19,7 +19,7 @@ dotnet add package Soenneker.Blazor.Clarity
 public static async Task Main(string[] args)
 {
     ...
-    builder.Services.AddClarity();
+    builder.Services.AddClarityInteropAsScoped();
 }
 ```
 
