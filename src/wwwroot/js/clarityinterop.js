@@ -10,6 +10,22 @@
             y.parentNode.insertBefore(t, y);
         })(window, document, "clarity", "script", key);
     }
+
+    consent() {
+        window.clarity("consent");
+    }
+
+    identify(id, sessionId, pageId, friendlyName) {
+        window.clarity("identify", id, sessionId || undefined, pageId || undefined, friendlyName || undefined);
+    }
+
+    setTag(key, value) {
+        window.clarity("set", key, value);
+    }
+
+    trackEvent(name) {
+        window.clarity("event", name);
+    }
 }
 
 window.ClarityInterop = new ClarityInterop();

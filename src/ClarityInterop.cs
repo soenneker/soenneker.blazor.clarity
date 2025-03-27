@@ -19,6 +19,9 @@ public class ClarityInterop : IClarityInterop
 
     private readonly AsyncSingleton _scriptInitializer;
 
+    private const string _modulePath = "Soenneker.Blazor.Clarity/js/clarityinterop.js";
+    private const string _moduleName = "ClarityInterop";
+
     public ClarityInterop(IJSRuntime jSRuntime, ILogger<ClarityInterop> logger, IResourceLoader resourceLoader)
     {
         _jsRuntime = jSRuntime;
@@ -27,7 +30,7 @@ public class ClarityInterop : IClarityInterop
 
         _scriptInitializer = new AsyncSingleton(async (token, _) =>
         {
-            await _resourceLoader.ImportModuleAndWaitUntilAvailable("Soenneker.Blazor.Clarity/clarityinterop.js", "ClarityInterop", 100, token).NoSync();
+            await _resourceLoader.ImportModuleAndWaitUntilAvailable(_modulePath, _moduleName, 100, token).NoSync();
             return new object();
         });
     }
@@ -38,14 +41,38 @@ public class ClarityInterop : IClarityInterop
 
         await _scriptInitializer.Init(cancellationToken).NoSync();
 
-        await _jsRuntime.InvokeVoidAsync("ClarityInterop.init", cancellationToken, key).NoSync();
+        await _jsRuntime.InvokeVoidAsync($"{_moduleName}.init", cancellationToken, key).NoSync();
+    }
+
+    public async ValueTask Consent(CancellationToken cancellationToken = default)
+    {
+        await _scriptInitializer.Init(cancellationToken).NoSync();
+        await _jsRuntime.InvokeVoidAsync($"{_moduleName}.consent", cancellationToken).NoSync();
+    }
+
+    public async ValueTask Identify(string id, string? sessionId = null, string? pageId = null, string? friendlyName = null, CancellationToken cancellationToken = default)
+    {
+        await _scriptInitializer.Init(cancellationToken).NoSync();
+        await _jsRuntime.InvokeVoidAsync($"{_moduleName}.identify", cancellationToken, id, sessionId, pageId, friendlyName).NoSync();
+    }
+
+    public async ValueTask SetTag(string key, object value, CancellationToken cancellationToken = default)
+    {
+        await _scriptInitializer.Init(cancellationToken).NoSync();
+        await _jsRuntime.InvokeVoidAsync($"{_moduleName}.setTag", cancellationToken, key, value).NoSync();
+    }
+
+    public async ValueTask TrackEvent(string name, CancellationToken cancellationToken = default)
+    {
+        await _scriptInitializer.Init(cancellationToken).NoSync();
+        await _jsRuntime.InvokeVoidAsync($"{_moduleName}.trackEvent", cancellationToken, name).NoSync();
     }
 
     public async ValueTask DisposeAsync()
     {
         GC.SuppressFinalize(this);
 
-        await _resourceLoader.DisposeModule("Soenneker.Blazor.Clarity/clarityinterop.js").NoSync();
+        await _resourceLoader.DisposeModule(_modulePath).NoSync();
 
         await _scriptInitializer.DisposeAsync().NoSync();
     }
