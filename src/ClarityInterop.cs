@@ -11,7 +11,7 @@ using Soenneker.Utils.AsyncSingleton;
 namespace Soenneker.Blazor.Clarity;
 
 ///<inheritdoc cref="IClarityInterop"/>
-public class ClarityInterop : IClarityInterop
+public sealed class ClarityInterop : IClarityInterop
 {
     private readonly IJSRuntime _jsRuntime;
     private readonly ILogger<ClarityInterop> _logger;
@@ -70,8 +70,6 @@ public class ClarityInterop : IClarityInterop
 
     public async ValueTask DisposeAsync()
     {
-        GC.SuppressFinalize(this);
-
         await _resourceLoader.DisposeModule(_modulePath).NoSync();
 
         await _scriptInitializer.DisposeAsync().NoSync();
