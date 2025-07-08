@@ -12,8 +12,7 @@ public static class ClarityRegistrar
 {
     public static IServiceCollection AddClarityInteropAsScoped(this IServiceCollection services)
     {
-        services.AddResourceLoaderAsScoped()
-                .TryAddScoped<IClarityInterop, ClarityInterop>();
+        services.AddResourceLoaderAsScoped().TryAddScoped<IClarityInterop, ClarityInterop>();
 
         return services;
     }
