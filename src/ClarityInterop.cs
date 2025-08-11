@@ -1,12 +1,13 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Microsoft.JSInterop;
 using Soenneker.Blazor.Clarity.Abstract;
 using Soenneker.Blazor.Utils.ResourceLoader.Abstract;
 using Soenneker.Extensions.ValueTask;
 using Soenneker.Utils.AsyncSingleton;
+using Soenneker.Utils.CancellationScopes;
+using System.Threading;
+using System.Threading.Tasks;
+using Soenneker.Extensions.CancellationTokens;
 
 namespace Soenneker.Blazor.Clarity;
 
@@ -21,6 +22,8 @@ public sealed class ClarityInterop : IClarityInterop
 
     private const string _modulePath = "Soenneker.Blazor.Clarity/js/clarityinterop.js";
     private const string _moduleName = "ClarityInterop";
+
+    private readonly CancellationScope _cancellationScope = new();
 
     public ClarityInterop(IJSRuntime jSRuntime, ILogger<ClarityInterop> logger, IResourceLoader resourceLoader)
     {
@@ -39,33 +42,59 @@ public sealed class ClarityInterop : IClarityInterop
     {
         _logger.LogDebug("Initializing Clarity...");
 
-        await _scriptInitializer.Init(cancellationToken).NoSync();
+        var linked = _cancellationScope.CancellationToken.Link(cancellationToken, out var source);
 
-        await _jsRuntime.InvokeVoidAsync($"{_moduleName}.init", cancellationToken, key).NoSync();
+        using (source)
+        {
+            await _scriptInitializer.Init(linked).NoSync();
+
+            await _jsRuntime.InvokeVoidAsync($"{_moduleName}.init", linked, key).NoSync();
+        }
     }
 
     public async ValueTask Consent(CancellationToken cancellationToken = default)
     {
-        await _scriptInitializer.Init(cancellationToken).NoSync();
-        await _jsRuntime.InvokeVoidAsync($"{_moduleName}.consent", cancellationToken).NoSync();
+        var linked = _cancellationScope.CancellationToken.Link(cancellationToken, out var source);
+
+        using (source)
+        {
+            await _scriptInitializer.Init(linked).NoSync();
+            await _jsRuntime.InvokeVoidAsync($"{_moduleName}.consent", linked).NoSync();
+        }
     }
 
-    public async ValueTask Identify(string id, string? sessionId = null, string? pageId = null, string? friendlyName = null, CancellationToken cancellationToken = default)
+    public async ValueTask Identify(string id, string? sessionId = null, string? pageId = null, string? friendlyName = null,
+        CancellationToken cancellationToken = default)
     {
-        await _scriptInitializer.Init(cancellationToken).NoSync();
-        await _jsRuntime.InvokeVoidAsync($"{_moduleName}.identify", cancellationToken, id, sessionId, pageId, friendlyName).NoSync();
+        var linked = _cancellationScope.CancellationToken.Link(cancellationToken, out var source);
+
+        using (source)
+        {
+            await _scriptInitializer.Init(linked).NoSync();
+            await _jsRuntime.InvokeVoidAsync($"{_moduleName}.identify", linked, id, sessionId, pageId, friendlyName).NoSync();
+        }
     }
 
     public async ValueTask SetTag(string key, object value, CancellationToken cancellationToken = default)
     {
-        await _scriptInitializer.Init(cancellationToken).NoSync();
-        await _jsRuntime.InvokeVoidAsync($"{_moduleName}.setTag", cancellationToken, key, value).NoSync();
+        var linked = _cancellationScope.CancellationToken.Link(cancellationToken, out var source);
+
+        using (source)
+        {
+            await _scriptInitializer.Init(linked).NoSync();
+            await _jsRuntime.InvokeVoidAsync($"{_moduleName}.setTag", linked, key, value).NoSync();
+        }
     }
 
     public async ValueTask TrackEvent(string name, CancellationToken cancellationToken = default)
     {
-        await _scriptInitializer.Init(cancellationToken).NoSync();
-        await _jsRuntime.InvokeVoidAsync($"{_moduleName}.trackEvent", cancellationToken, name).NoSync();
+        var linked = _cancellationScope.CancellationToken.Link(cancellationToken, out var source);
+
+        using (source)
+        {
+            await _scriptInitializer.Init(linked).NoSync();
+            await _jsRuntime.InvokeVoidAsync($"{_moduleName}.trackEvent", linked, name).NoSync();
+        }
     }
 
     public async ValueTask DisposeAsync()
@@ -73,5 +102,7 @@ public sealed class ClarityInterop : IClarityInterop
         await _resourceLoader.DisposeModule(_modulePath).NoSync();
 
         await _scriptInitializer.DisposeAsync().NoSync();
+
+        await _cancellationScope.DisposeAsync().NoSync();
     }
 }
