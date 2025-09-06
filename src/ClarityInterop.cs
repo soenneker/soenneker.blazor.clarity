@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging;
 using Microsoft.JSInterop;
 using Soenneker.Blazor.Clarity.Abstract;
 using Soenneker.Blazor.Utils.ResourceLoader.Abstract;
@@ -33,7 +33,7 @@ public sealed class ClarityInterop : IClarityInterop
 
         _scriptInitializer = new AsyncSingleton(async (token, _) =>
         {
-            await _resourceLoader.ImportModuleAndWaitUntilAvailable(_modulePath, _moduleName, 100, token).NoSync();
+            await _resourceLoader.ImportModuleAndWaitUntilAvailable(_modulePath, _moduleName, 100, token);
             return new object();
         });
     }
@@ -46,9 +46,9 @@ public sealed class ClarityInterop : IClarityInterop
 
         using (source)
         {
-            await _scriptInitializer.Init(linked).NoSync();
+            await _scriptInitializer.Init(linked);
 
-            await _jsRuntime.InvokeVoidAsync($"{_moduleName}.init", linked, key).NoSync();
+            await _jsRuntime.InvokeVoidAsync($"{_moduleName}.init", linked, key);
         }
     }
 
@@ -58,8 +58,8 @@ public sealed class ClarityInterop : IClarityInterop
 
         using (source)
         {
-            await _scriptInitializer.Init(linked).NoSync();
-            await _jsRuntime.InvokeVoidAsync($"{_moduleName}.consent", linked).NoSync();
+            await _scriptInitializer.Init(linked);
+            await _jsRuntime.InvokeVoidAsync($"{_moduleName}.consent", linked);
         }
     }
 
@@ -70,8 +70,8 @@ public sealed class ClarityInterop : IClarityInterop
 
         using (source)
         {
-            await _scriptInitializer.Init(linked).NoSync();
-            await _jsRuntime.InvokeVoidAsync($"{_moduleName}.identify", linked, id, sessionId, pageId, friendlyName).NoSync();
+            await _scriptInitializer.Init(linked);
+            await _jsRuntime.InvokeVoidAsync($"{_moduleName}.identify", linked, id, sessionId, pageId, friendlyName);
         }
     }
 
@@ -81,8 +81,8 @@ public sealed class ClarityInterop : IClarityInterop
 
         using (source)
         {
-            await _scriptInitializer.Init(linked).NoSync();
-            await _jsRuntime.InvokeVoidAsync($"{_moduleName}.setTag", linked, key, value).NoSync();
+            await _scriptInitializer.Init(linked);
+            await _jsRuntime.InvokeVoidAsync($"{_moduleName}.setTag", linked, key, value);
         }
     }
 
@@ -92,17 +92,17 @@ public sealed class ClarityInterop : IClarityInterop
 
         using (source)
         {
-            await _scriptInitializer.Init(linked).NoSync();
-            await _jsRuntime.InvokeVoidAsync($"{_moduleName}.trackEvent", linked, name).NoSync();
+            await _scriptInitializer.Init(linked);
+            await _jsRuntime.InvokeVoidAsync($"{_moduleName}.trackEvent", linked, name);
         }
     }
 
     public async ValueTask DisposeAsync()
     {
-        await _resourceLoader.DisposeModule(_modulePath).NoSync();
+        await _resourceLoader.DisposeModule(_modulePath);
 
-        await _scriptInitializer.DisposeAsync().NoSync();
+        await _scriptInitializer.DisposeAsync();
 
-        await _cancellationScope.DisposeAsync().NoSync();
+        await _cancellationScope.DisposeAsync();
     }
 }
