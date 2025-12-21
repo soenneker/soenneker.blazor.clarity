@@ -2,11 +2,10 @@ using Microsoft.Extensions.Logging;
 using Microsoft.JSInterop;
 using Soenneker.Blazor.Clarity.Abstract;
 using Soenneker.Blazor.Utils.ResourceLoader.Abstract;
-using Soenneker.Extensions.ValueTask;
-using Soenneker.Utils.AsyncSingleton;
 using Soenneker.Utils.CancellationScopes;
 using System.Threading;
 using System.Threading.Tasks;
+using Soenneker.Asyncs.Initializers;
 using Soenneker.Extensions.CancellationTokens;
 
 namespace Soenneker.Blazor.Clarity;
@@ -18,7 +17,7 @@ public sealed class ClarityInterop : IClarityInterop
     private readonly ILogger<ClarityInterop> _logger;
     private readonly IResourceLoader _resourceLoader;
 
-    private readonly AsyncSingleton _scriptInitializer;
+    private readonly AsyncInitializer _scriptInitializer;
 
     private const string _modulePath = "Soenneker.Blazor.Clarity/js/clarityinterop.js";
     private const string _moduleName = "ClarityInterop";
@@ -31,10 +30,9 @@ public sealed class ClarityInterop : IClarityInterop
         _logger = logger;
         _resourceLoader = resourceLoader;
 
-        _scriptInitializer = new AsyncSingleton(async (token, _) =>
+        _scriptInitializer = new AsyncInitializer(async token =>
         {
             await _resourceLoader.ImportModuleAndWaitUntilAvailable(_modulePath, _moduleName, 100, token);
-            return new object();
         });
     }
 
