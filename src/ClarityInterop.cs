@@ -29,11 +29,12 @@ public sealed class ClarityInterop : IClarityInterop
         _jsRuntime = jSRuntime;
         _logger = logger;
         _resourceLoader = resourceLoader;
+        _scriptInitializer = new AsyncInitializer(InitializeScript);
+    }
 
-        _scriptInitializer = new AsyncInitializer(async token =>
-        {
-            await _resourceLoader.ImportModuleAndWaitUntilAvailable(_modulePath, _moduleName, 100, token);
-        });
+    private async ValueTask InitializeScript(CancellationToken token)
+    {
+        await _resourceLoader.ImportModuleAndWaitUntilAvailable(_modulePath, _moduleName, 100, token);
     }
 
     public async ValueTask Init(string key, CancellationToken cancellationToken = default)
@@ -46,7 +47,7 @@ public sealed class ClarityInterop : IClarityInterop
         {
             await _scriptInitializer.Init(linked);
 
-            await _jsRuntime.InvokeVoidAsync($"{_moduleName}.init", linked, key);
+            await _jsRuntime.InvokeVoidAsync("ClarityInterop.init", linked, key);
         }
     }
 
@@ -57,7 +58,7 @@ public sealed class ClarityInterop : IClarityInterop
         using (source)
         {
             await _scriptInitializer.Init(linked);
-            await _jsRuntime.InvokeVoidAsync($"{_moduleName}.consent", linked);
+            await _jsRuntime.InvokeVoidAsync("ClarityInterop.consent", linked);
         }
     }
 
@@ -69,7 +70,7 @@ public sealed class ClarityInterop : IClarityInterop
         using (source)
         {
             await _scriptInitializer.Init(linked);
-            await _jsRuntime.InvokeVoidAsync($"{_moduleName}.identify", linked, id, sessionId, pageId, friendlyName);
+            await _jsRuntime.InvokeVoidAsync("ClarityInterop.identify", linked, id, sessionId, pageId, friendlyName);
         }
     }
 
@@ -80,7 +81,7 @@ public sealed class ClarityInterop : IClarityInterop
         using (source)
         {
             await _scriptInitializer.Init(linked);
-            await _jsRuntime.InvokeVoidAsync($"{_moduleName}.setTag", linked, key, value);
+            await _jsRuntime.InvokeVoidAsync("ClarityInterop.setTag", linked, key, value);
         }
     }
 
@@ -91,7 +92,7 @@ public sealed class ClarityInterop : IClarityInterop
         using (source)
         {
             await _scriptInitializer.Init(linked);
-            await _jsRuntime.InvokeVoidAsync($"{_moduleName}.trackEvent", linked, name);
+            await _jsRuntime.InvokeVoidAsync("ClarityInterop.trackEvent", linked, name);
         }
     }
 
