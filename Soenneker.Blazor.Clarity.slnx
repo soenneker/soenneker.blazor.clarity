@@ -1,11 +1,11 @@
 <Solution>
-  <Folder Name="/.github/" />
   <Folder Name="/.github/workflows/">
     <File Path=".github/workflows/build-and-test.yml" />
+    <File Path=".github/workflows/codeql.yml" />
     <File Path=".github/workflows/publish-package.yml" />
   </Folder>
   <Folder Name="/src/">
-    <Project Path="src/Soenneker.Blazor.Clarity.csproj" />
+    <Project Path="src/Soenneker.Blazor.Clarity/Soenneker.Blazor.Clarity.csproj" />
   </Folder>
   <Folder Name="/test/">
     <Project Path="test/Soenneker.Blazor.Clarity.Tests/Soenneker.Blazor.Clarity.Tests.csproj" />
