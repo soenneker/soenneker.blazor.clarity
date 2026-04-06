@@ -1,7 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Soenneker.Blazor.Clarity.Abstract;
-using Soenneker.Blazor.Utils.ResourceLoader.Registrars;
+using Soenneker.Blazor.Utils.ModuleImport.Registrars;
 
 namespace Soenneker.Blazor.Clarity.Registrars;
 
@@ -12,7 +12,7 @@ public static class ClarityRegistrar
 {
     public static IServiceCollection AddClarityInteropAsScoped(this IServiceCollection services)
     {
-        services.AddResourceLoaderAsScoped().TryAddScoped<IClarityInterop, ClarityInterop>();
+        services.AddModuleImportUtilAsScoped().TryAddScoped<IClarityInterop, ClarityInterop>();
 
         return services;
     }

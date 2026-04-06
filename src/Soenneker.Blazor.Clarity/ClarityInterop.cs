@@ -1,11 +1,10 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.JSInterop;
 using Soenneker.Blazor.Clarity.Abstract;
-using Soenneker.Blazor.Utils.ResourceLoader.Abstract;
+using Soenneker.Blazor.Utils.ModuleImport.Abstract;
 using Soenneker.Utils.CancellationScopes;
 using System.Threading;
 using System.Threading.Tasks;
-using Soenneker.Asyncs.Initializers;
 using Soenneker.Extensions.CancellationTokens;
 
 namespace Soenneker.Blazor.Clarity;
@@ -13,28 +12,17 @@ namespace Soenneker.Blazor.Clarity;
 ///<inheritdoc cref="IClarityInterop"/>
 public sealed class ClarityInterop : IClarityInterop
 {
-    private readonly IJSRuntime _jsRuntime;
     private readonly ILogger<ClarityInterop> _logger;
-    private readonly IResourceLoader _resourceLoader;
+    private readonly IModuleImportUtil _moduleImportUtil;
 
-    private readonly AsyncInitializer _scriptInitializer;
-
-    private const string _modulePath = "Soenneker.Blazor.Clarity/js/clarityinterop.js";
-    private const string _moduleName = "ClarityInterop";
+    private const string _modulePath = "/_content/Soenneker.Blazor.Clarity/js/clarityinterop.js";
 
     private readonly CancellationScope _cancellationScope = new();
 
-    public ClarityInterop(IJSRuntime jSRuntime, ILogger<ClarityInterop> logger, IResourceLoader resourceLoader)
+    public ClarityInterop(ILogger<ClarityInterop> logger, IModuleImportUtil moduleImportUtil)
     {
-        _jsRuntime = jSRuntime;
         _logger = logger;
-        _resourceLoader = resourceLoader;
-        _scriptInitializer = new AsyncInitializer(InitializeScript);
-    }
-
-    private async ValueTask InitializeScript(CancellationToken token)
-    {
-        _ = await _resourceLoader.ImportModule(_modulePath, token);
+        _moduleImportUtil = moduleImportUtil;
     }
 
     public async ValueTask Init(string key, CancellationToken cancellationToken = default)
@@ -45,9 +33,8 @@ public sealed class ClarityInterop : IClarityInterop
 
         using (source)
         {
-            await _scriptInitializer.Init(linked);
-
-            await _jsRuntime.InvokeVoidAsync("ClarityInterop.init", linked, key);
+            IJSObjectReference module = await _moduleImportUtil.GetContentModuleReference(_modulePath, linked);
+            await module.InvokeVoidAsync("init", linked, key);
         }
     }
 
@@ -57,8 +44,8 @@ public sealed class ClarityInterop : IClarityInterop
 
         using (source)
         {
-            await _scriptInitializer.Init(linked);
-            await _jsRuntime.InvokeVoidAsync("ClarityInterop.consent", linked);
+            IJSObjectReference module = await _moduleImportUtil.GetContentModuleReference(_modulePath, linked);
+            await module.InvokeVoidAsync("consent", linked);
         }
     }
 
@@ -69,8 +56,8 @@ public sealed class ClarityInterop : IClarityInterop
 
         using (source)
         {
-            await _scriptInitializer.Init(linked);
-            await _jsRuntime.InvokeVoidAsync("ClarityInterop.identify", linked, id, sessionId, pageId, friendlyName);
+            IJSObjectReference module = await _moduleImportUtil.GetContentModuleReference(_modulePath, linked);
+            await module.InvokeVoidAsync("identify", linked, id, sessionId, pageId, friendlyName);
         }
     }
 
@@ -80,8 +67,8 @@ public sealed class ClarityInterop : IClarityInterop
 
         using (source)
         {
-            await _scriptInitializer.Init(linked);
-            await _jsRuntime.InvokeVoidAsync("ClarityInterop.setTag", linked, key, value);
+            IJSObjectReference module = await _moduleImportUtil.GetContentModuleReference(_modulePath, linked);
+            await module.InvokeVoidAsync("setTag", linked, key, value);
         }
     }
 
@@ -91,17 +78,14 @@ public sealed class ClarityInterop : IClarityInterop
 
         using (source)
         {
-            await _scriptInitializer.Init(linked);
-            await _jsRuntime.InvokeVoidAsync("ClarityInterop.trackEvent", linked, name);
+            IJSObjectReference module = await _moduleImportUtil.GetContentModuleReference(_modulePath, linked);
+            await module.InvokeVoidAsync("trackEvent", linked, name);
         }
     }
 
     public async ValueTask DisposeAsync()
     {
-        await _resourceLoader.DisposeModule(_modulePath);
-
-        await _scriptInitializer.DisposeAsync();
-
+        await _moduleImportUtil.DisposeContentModule(_modulePath);
         await _cancellationScope.DisposeAsync();
     }
 }
