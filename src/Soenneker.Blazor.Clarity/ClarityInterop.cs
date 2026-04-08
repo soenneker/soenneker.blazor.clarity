@@ -15,7 +15,7 @@ public sealed class ClarityInterop : IClarityInterop
     private readonly ILogger<ClarityInterop> _logger;
     private readonly IModuleImportUtil _moduleImportUtil;
 
-    private const string _modulePath = "/_content/Soenneker.Blazor.Clarity/js/clarityinterop.js";
+    private const string _modulePath = "_content/Soenneker.Blazor.Clarity/js/clarityinterop.js";
 
     private readonly CancellationScope _cancellationScope = new();
 
