@@ -1,21 +1,19 @@
 using Soenneker.Blazor.Clarity.Abstract;
-using Soenneker.Tests.FixturedUnit;
-using Xunit;
-
+using Soenneker.Tests.HostedUnit;
 
 namespace Soenneker.Blazor.Clarity.Tests;
 
-[Collection("Collection")]
-public class ClarityInteropTests : FixturedUnitTest
+[ClassDataSource<Host>(Shared = SharedType.PerTestSession)]
+public class ClarityInteropTests : HostedUnitTest
 {
     private readonly IClarityInterop _util;
 
-    public ClarityInteropTests(Fixture fixture, ITestOutputHelper output) : base(fixture, output)
+    public ClarityInteropTests(Host host) : base(host)
     {
         _util = Resolve<IClarityInterop>(true);
     }
 
-    [Fact]
+    [Test]
     public void Default()
     {
 
