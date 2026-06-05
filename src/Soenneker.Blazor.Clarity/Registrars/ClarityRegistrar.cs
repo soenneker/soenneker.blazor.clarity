@@ -10,6 +10,11 @@ namespace Soenneker.Blazor.Clarity.Registrars;
 /// </summary>
 public static class ClarityRegistrar
 {
+    /// <summary>
+    /// Adds clarity interop as scoped.
+    /// </summary>
+    /// <param name="services">The service collection.</param>
+    /// <returns>The result of the operation.</returns>
     public static IServiceCollection AddClarityInteropAsScoped(this IServiceCollection services)
     {
         services.AddModuleImportUtilAsScoped().TryAddScoped<IClarityInterop, ClarityInterop>();
