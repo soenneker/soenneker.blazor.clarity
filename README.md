@@ -42,3 +42,15 @@ protected override async Task OnAfterRenderAsync(bool firstRender)
     await ClarityInterop.Init("your-key-here");
 }
 ```
+
+## Consent V2
+
+When the visitor makes a consent choice, pass both Clarity storage signals explicitly:
+
+```csharp
+await ClarityInterop.Consent(
+    adStorage: marketingCookiesAccepted,
+    analyticsStorage: analyticsCookiesAccepted);
+```
+
+Call `Consent` after `Init`. Calling it with `false` values tells Clarity to operate without the corresponding storage and clears applicable Clarity cookies when consent is revoked.

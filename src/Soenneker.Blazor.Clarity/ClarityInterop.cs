@@ -38,14 +38,14 @@ public sealed class ClarityInterop : IClarityInterop
         }
     }
 
-    public async ValueTask Consent(CancellationToken cancellationToken = default)
+    public async ValueTask Consent(bool adStorage, bool analyticsStorage, CancellationToken cancellationToken = default)
     {
-        var linked = _cancellationScope.CancellationToken.Link(cancellationToken, out var source);
+        CancellationToken linked = _cancellationScope.CancellationToken.Link(cancellationToken, out CancellationTokenSource? source);
 
         using (source)
         {
             IJSObjectReference module = await _moduleImportUtil.GetContentModuleReference(_modulePath, linked);
-            await module.InvokeVoidAsync("consent", linked);
+            await module.InvokeVoidAsync("consent", linked, adStorage, analyticsStorage);
         }
     }
 

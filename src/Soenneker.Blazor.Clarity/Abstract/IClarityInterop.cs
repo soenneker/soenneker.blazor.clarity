@@ -15,9 +15,12 @@ public interface IClarityInterop : IAsyncDisposable
     ValueTask Init(string key, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Sends the consent signal to Clarity
+    /// Sends explicit advertising and analytics storage consent to Clarity using the Consent V2 API.
     /// </summary>
-    ValueTask Consent(CancellationToken cancellationToken = default);
+    /// <param name="adStorage">Whether storage related to advertising is permitted.</param>
+    /// <param name="analyticsStorage">Whether storage related to analytics is permitted.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    ValueTask Consent(bool adStorage, bool analyticsStorage, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Identifies a user with optional session, page, and friendly names
