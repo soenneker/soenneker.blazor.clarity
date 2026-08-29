@@ -15,6 +15,8 @@ public interface IClarityInterop : IAsyncDisposable
     /// <param name="key">Key used to locate the target entry.</param>
     /// <param name="cancellationToken">Token used to cancel the operation.</param>
     /// <returns>A task that completes when the clarity is ready for use.</returns>
+    /// <exception cref="ArgumentException">Thrown when <paramref name="key"/> is empty or whitespace.</exception>
+    /// <exception cref="InvalidOperationException">Thrown when the interop was already initialized with another project key.</exception>
     ValueTask Init(string key, CancellationToken cancellationToken = default);
 
     /// <summary>
@@ -44,6 +46,7 @@ public interface IClarityInterop : IAsyncDisposable
     /// <param name="value">Tag value, supplied as text or an array of text values.</param>
     /// <param name="cancellationToken">Token used to cancel the operation.</param>
     /// <returns>A task that completes when the tag has been stored.</returns>
+    /// <exception cref="ArgumentException">Thrown when the key is blank or the value is not a string or string array.</exception>
     ValueTask SetTag(string key, object value, CancellationToken cancellationToken = default);
 
     /// <summary>

@@ -1,5 +1,11 @@
 export function init(key) {
-    if (document.querySelector('script[src^="https://www.clarity.ms/tag/"]')) {
+    const expectedUrl = new URL("https://www.clarity.ms/tag/" + encodeURIComponent(key)).href;
+    const existingScript = document.querySelector('script[src^="https://www.clarity.ms/tag/"]');
+
+    if (existingScript) {
+        if (existingScript.src !== expectedUrl)
+            throw new Error("Clarity is already loaded with a different project key.");
+
         return;
     }
 

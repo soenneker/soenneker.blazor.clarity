@@ -1,4 +1,6 @@
+using System;
 using Microsoft.JSInterop;
+using AwesomeAssertions;
 using Soenneker.Blazor.Clarity.Abstract;
 using Soenneker.Blazor.MockJsRuntime.Abstract;
 using Soenneker.Tests.HostedUnit;
@@ -21,6 +23,15 @@ public class ClarityInteropTests : HostedUnitTest
     [Test]
     public async Task Consent_v2_can_be_invoked()
     {
+        await _util.Init("project-key");
         await _util.Consent(adStorage: false, analyticsStorage: true);
+    }
+
+    [Test]
+    public async Task Init_rejects_a_blank_project_key()
+    {
+        Func<Task> act = async () => await _util.Init("   ");
+
+        await act.Should().ThrowAsync<ArgumentException>();
     }
 }

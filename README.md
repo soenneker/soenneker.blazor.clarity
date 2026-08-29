@@ -3,54 +3,61 @@
 [![](https://img.shields.io/nuget/dt/Soenneker.Blazor.Clarity.svg?style=for-the-badge)](https://www.nuget.org/packages/Soenneker.Blazor.Clarity/)
 [![](https://img.shields.io/github/actions/workflow/status/soenneker/soenneker.blazor.clarity/codeql.yml?label=CodeQL&style=for-the-badge)](https://github.com/soenneker/soenneker.blazor.clarity/actions/workflows/codeql.yml)
 
-# ![](https://user-images.githubusercontent.com/4441470/224455560-91ed3ee7-f510-4041-a8d2-3fc093025112.png) Soenneker.Blazor.Clarity
-### A Blazor interop library that sets up [Microsoft Clarity](https://clarity.microsoft.com/)
+# Soenneker.Blazor.Clarity
 
-## Installation
+Scoped Blazor JavaScript interop for Microsoft Clarity initialization, Consent V2, identification, tags, and custom events.
 
-```
+## Installation and registration
+
+```bash
 dotnet add package Soenneker.Blazor.Clarity
 ```
 
-## Usage
-
-1. Register the interop within DI (`Program.cs`)
-
 ```csharp
-public static async Task Main(string[] args)
-{
-    ...
-    builder.Services.AddClarityInteropAsScoped();
-}
+using Soenneker.Blazor.Clarity.Registrars;
+
+builder.Services.AddClarityInteropAsScoped();
 ```
 
-2. Inject `IClarityInterop` within your `App.Razor` file
+## Initialize with consent
 
-```csharp
+Initialize after the first render, then immediately send the visitor's stored consent choices. Calls are queued by Clarity while its remote script loads.
+
+```razor
 @using Soenneker.Blazor.Clarity.Abstract
-@inject IClarityInterop ClarityInterop
-```
+@inject IClarityInterop Clarity
+@inject IConfiguration Configuration
 
-3. Call the interop from `OnAfterRenderAsync` in `App.razor`.
+@code {
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+            return;
 
-```csharp
-protected override async Task OnAfterRenderAsync(bool firstRender)
-{
-    if (!firstRender)
-        return;
-
-    await ClarityInterop.Init("your-key-here");
+        await Clarity.Init(Configuration["Clarity:ProjectId"]!);
+        await Clarity.Consent(
+            adStorage: marketingConsent,
+            analyticsStorage: analyticsConsent);
+    }
 }
 ```
 
-## Consent V2
+Call `Consent` again whenever either choice changes. Passing `false` denies the corresponding storage category and asks Clarity to clear applicable cookies. The wrapper requires `Init` before every other operation and prevents the same scoped instance from switching project IDs.
 
-When the visitor makes a consent choice, pass both Clarity storage signals explicitly:
+## Identify, tag, and track
 
 ```csharp
-await ClarityInterop.Consent(
-    adStorage: marketingCookiesAccepted,
-    analyticsStorage: analyticsCookiesAccepted);
+await Clarity.Identify(
+    id: pseudonymousUserId,
+    sessionId: sessionId,
+    pageId: routeId,
+    friendlyName: accountDisplayName);
+
+await Clarity.SetTag("subscription", "business");
+await Clarity.SetTag("experiments", new[] { "checkout-a", "nav-b" });
+await Clarity.TrackEvent("checkout_completed");
 ```
 
-Call `Consent` after `Init`. Calling it with `false` values tells Clarity to operate without the corresponding storage and clears applicable Clarity cookies when consent is revoked.
+Tag values must be a string or string array. Avoid sending email addresses, names, raw account IDs, or other directly identifying data as Clarity IDs, tags, event names, or friendly names; use pseudonymous values approved by your privacy policy.
+
+The browser loads Clarity from `https://www.clarity.ms`. Configure Content Security Policy and consent gating for that origin before enabling the integration. Disposing the scoped interop releases the package's JavaScript module, but it does not unload a Clarity tracker already installed on the page.
