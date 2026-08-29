@@ -9,7 +9,7 @@ using Soenneker.Extensions.CancellationTokens;
 
 namespace Soenneker.Blazor.Clarity;
 
-///<inheritdoc cref="IClarityInterop"/>
+/// <inheritdoc cref="IClarityInterop"/>
 public sealed class ClarityInterop : IClarityInterop
 {
     private readonly ILogger<ClarityInterop> _logger;
