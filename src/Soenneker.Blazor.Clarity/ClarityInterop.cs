@@ -1,5 +1,3 @@
-using Soenneker.Extensions.ValueTask;
-using Soenneker.Extensions.Task;
 using Microsoft.Extensions.Logging;
 using Microsoft.JSInterop;
 using Soenneker.Blazor.Clarity.Abstract;
@@ -38,7 +36,7 @@ public sealed class ClarityInterop : IClarityInterop
 
         using (source)
         {
-            await _initializationLock.WaitAsync(linked).NoSync();
+            await _initializationLock.WaitAsync(linked).ConfigureAwait(false);
 
             try
             {
@@ -51,8 +49,8 @@ public sealed class ClarityInterop : IClarityInterop
                 }
 
                 _logger.LogDebug("Initializing Clarity...");
-                IJSObjectReference module = await _moduleImportUtil.GetContentModuleReference(_modulePath, linked).NoSync();
-                await module.InvokeVoidAsync("init", linked, key).NoSync();
+                IJSObjectReference module = await _moduleImportUtil.GetContentModuleReference(_modulePath, linked).ConfigureAwait(false);
+                await module.InvokeVoidAsync("init", linked, key).ConfigureAwait(false);
                 _projectKey = key;
             }
             finally
@@ -126,12 +124,12 @@ public sealed class ClarityInterop : IClarityInterop
     public async ValueTask DisposeAsync()
     {
         _cancellationScope.Cancel();
-        await _initializationLock.WaitAsync().NoSync();
+        await _initializationLock.WaitAsync().ConfigureAwait(false);
 
         try
         {
-            await _moduleImportUtil.DisposeContentModule(_modulePath).NoSync();
-            await _cancellationScope.DisposeAsync().NoSync();
+            await _moduleImportUtil.DisposeContentModule(_modulePath).ConfigureAwait(false);
+            await _cancellationScope.DisposeAsync().ConfigureAwait(false);
         }
         finally
         {
