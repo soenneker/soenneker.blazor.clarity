@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.JSInterop;
+using Soenneker.Asyncs.Initializers;
 using Soenneker.Blazor.Clarity.Abstract;
 using Soenneker.Blazor.Utils.ModuleImport.Abstract;
 using Soenneker.Utils.CancellationScopes;
@@ -19,13 +20,14 @@ public sealed class ClarityInterop : IClarityInterop
     private const string _modulePath = "_content/Soenneker.Blazor.Clarity/js/clarityinterop.js";
 
     private readonly CancellationScope _cancellationScope = new();
-    private readonly SemaphoreSlim _initializationLock = new(1, 1);
+    private readonly AsyncInitializer<string> _initializer;
     private string? _projectKey;
 
     public ClarityInterop(ILogger<ClarityInterop> logger, IModuleImportUtil moduleImportUtil)
     {
         _logger = logger;
         _moduleImportUtil = moduleImportUtil;
+        _initializer = new AsyncInitializer<string>(Initialize);
     }
 
     public async ValueTask Init(string key, CancellationToken cancellationToken = default)
@@ -36,28 +38,19 @@ public sealed class ClarityInterop : IClarityInterop
 
         using (source)
         {
-            await _initializationLock.WaitAsync(linked).ConfigureAwait(false);
+            await _initializer.Init(key, linked).ConfigureAwait(false);
 
-            try
-            {
-                if (_projectKey is not null)
-                {
-                    if (!string.Equals(_projectKey, key, StringComparison.Ordinal))
-                        throw new InvalidOperationException("Clarity has already been initialized with a different project key.");
-
-                    return;
-                }
-
-                _logger.LogDebug("Initializing Clarity...");
-                IJSObjectReference module = await _moduleImportUtil.GetContentModuleReference(_modulePath, linked).ConfigureAwait(false);
-                await module.InvokeVoidAsync("init", linked, key).ConfigureAwait(false);
-                _projectKey = key;
-            }
-            finally
-            {
-                _initializationLock.Release();
-            }
+            if (!string.Equals(_projectKey, key, StringComparison.Ordinal))
+                throw new InvalidOperationException("Clarity has already been initialized with a different project key.");
         }
+    }
+
+    private async ValueTask Initialize(string key, CancellationToken cancellationToken)
+    {
+        _logger.LogDebug("Initializing Clarity...");
+        IJSObjectReference module = await _moduleImportUtil.GetContentModuleReference(_modulePath, cancellationToken).ConfigureAwait(false);
+        await module.InvokeVoidAsync("init", cancellationToken, key).ConfigureAwait(false);
+        _projectKey = key;
     }
 
     public async ValueTask Consent(bool adStorage, bool analyticsStorage, CancellationToken cancellationToken = default)
@@ -124,24 +117,14 @@ public sealed class ClarityInterop : IClarityInterop
     public async ValueTask DisposeAsync()
     {
         _cancellationScope.Cancel();
-        await _initializationLock.WaitAsync().ConfigureAwait(false);
-
-        try
-        {
-            await _moduleImportUtil.DisposeContentModule(_modulePath).ConfigureAwait(false);
-            await _cancellationScope.DisposeAsync().ConfigureAwait(false);
-        }
-        finally
-        {
-            _initializationLock.Release();
-        }
-
-        _initializationLock.Dispose();
+        await _initializer.DisposeAsync().ConfigureAwait(false);
+        await _moduleImportUtil.DisposeContentModule(_modulePath).ConfigureAwait(false);
+        await _cancellationScope.DisposeAsync().ConfigureAwait(false);
     }
 
     private void EnsureInitialized()
     {
-        if (_projectKey is null)
+        if (!_initializer.IsInitialized)
             throw new InvalidOperationException("Init must be called before using Clarity.");
     }
 }
