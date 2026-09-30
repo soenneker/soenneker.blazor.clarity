@@ -22,14 +22,14 @@ public class ClarityInteropTests : HostedUnitTest
     }
 
     [Test]
-    public async Task Consent_v2_can_be_invoked(CancellationToken cancellationToken)
+    public async ValueTask Consent_v2_can_be_invoked(CancellationToken cancellationToken)
     {
         await _util.Init("project-key", cancellationToken: cancellationToken);
         await _util.Consent(adStorage: false, analyticsStorage: true);
     }
 
     [Test]
-    public async Task Init_rejects_a_blank_project_key(CancellationToken cancellationToken)
+    public async ValueTask Init_rejects_a_blank_project_key(CancellationToken cancellationToken)
     {
         Func<Task> act = async () => await _util.Init("   ", cancellationToken: cancellationToken);
 
