@@ -25,7 +25,7 @@ public class ClarityInteropTests : HostedUnitTest
     public async ValueTask Consent_v2_can_be_invoked(CancellationToken cancellationToken)
     {
         await _util.Init("project-key", cancellationToken: cancellationToken);
-        await _util.Consent(adStorage: false, analyticsStorage: true);
+        await _util.Consent(adStorage: false, analyticsStorage: true, cancellationToken: cancellationToken);
     }
 
     [Test]
