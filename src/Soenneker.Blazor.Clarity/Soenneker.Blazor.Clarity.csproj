@@ -45,7 +45,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Soenneker.Asyncs.Initializers" Version="11.0.142" />
+        <PackageReference Include="Soenneker.Asyncs.Initializers" Version="11.0.143" />
         <PackageReference Include="Soenneker.Blazor.Utils.ModuleImport" Version="11.0.1946" />
     </ItemGroup>
     <ItemGroup>
