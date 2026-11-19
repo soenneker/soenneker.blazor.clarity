@@ -45,10 +45,10 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Soenneker.Asyncs.Initializers" Version="11.0.143" />
-        <PackageReference Include="Soenneker.Blazor.Utils.ModuleImport" Version="11.0.1946" />
+        <PackageReference Include="Soenneker.Asyncs.Initializers" Version="11.0.144" />
+        <PackageReference Include="Soenneker.Blazor.Utils.ModuleImport" Version="11.0.1949" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Soenneker.Gen.Web.Minifier" Version="11.0.80" PrivateAssets="all" />
+        <PackageReference Include="Soenneker.Gen.Web.Minifier" Version="11.0.82" PrivateAssets="all" />
     </ItemGroup>
 </Project>
